@@ -35,7 +35,7 @@ public class UploadFileService {
 		this.s3Client=s3Client;
 	}
 	
-	@Value("${s3.localPath}")
+	@Value("${s3.local.path}")
 	private String localPath;
 	
 	public String save_image(MultipartFile file) throws IOException {
@@ -62,6 +62,14 @@ public class UploadFileService {
 	}
 	
 	public String downloadFile(String fileName) throws IOException {
+		Path path=Paths.get(localPath);
+		if(!Files.exists(path)) {
+			try {
+				Files.createDirectories(path);
+			}catch(IOException ex) {
+				System.out.println(ex);
+			}
+		}
 		
 		if(!doesObjectExists(fileName)) {
 			return "El archivo no existe";
