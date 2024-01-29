@@ -1,5 +1,6 @@
 package com.curso.ecommerce.controller;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -25,8 +26,10 @@ import com.curso.ecommerce.service.IDetalleService;
 import com.curso.ecommerce.service.IOrdenService;
 import com.curso.ecommerce.service.IUsuarioService;
 import com.curso.ecommerce.service.ProductoService;
+import com.curso.ecommerce.service.UploadFileService;
 
 import jakarta.servlet.http.HttpSession;
+import software.amazon.awssdk.services.s3.model.NoSuchKeyException;
 
 @Controller
 @RequestMapping("/")
@@ -49,11 +52,27 @@ public class HomeController {
 	@Autowired
 	private IDetalleService detalleService;
 	
+	@Autowired
+	private UploadFileService uploadService;
+	
 	@GetMapping("")
 	public String home(Model model,HttpSession session) {
-		model.addAttribute("productos",productoService.findAll());
+		List<Producto> productos=productoService.findAll();
+		model.addAttribute("productos",productos);
 		logger.info("session_id {}",session.getAttribute("id_usuario"));
 		model.addAttribute("sesion",session.getAttribute("id_usuario"));
+		
+		//Download images
+		productos.forEach(t -> {
+			try {
+				uploadService.downloadFile(t.getImagen());
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}catch(NoSuchKeyException ke){
+				
+			}
+		});
 		return "usuario/home";
 	}
 	
@@ -64,6 +83,15 @@ public class HomeController {
 		Producto producto=new Producto();
 		Optional<Producto> productoOpcional=productoService.get(id);
 		producto=productoOpcional.get();
+		
+		//Download images
+		try {
+			uploadService.downloadFile(producto.getImagen());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		model.addAttribute("producto",producto);
 		model.addAttribute("sesion",session.getAttribute("id_usuario"));
 		return "usuario/productohome";
