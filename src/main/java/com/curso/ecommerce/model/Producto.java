@@ -26,7 +26,7 @@ public class Producto {
 	@ManyToOne
 	private Usuario usuario;
 	
-	@OneToMany(mappedBy = "producto")
+	@OneToMany(orphanRemoval = true, cascade = CascadeType.REMOVE,mappedBy = "producto")
 	private List<DetalleOrden> detalles;
 	
 	public Producto() {
