@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.curso.ecommerce</groupId>
 	<artifactId>spring_ecommerce</artifactId>
-	<version>0.1.4</version>
+	<version>0.0.5</version>
 	<name>spring_ecommerce</name>
 	<description>Proyecto de Spring Framework</description>
 	<properties>

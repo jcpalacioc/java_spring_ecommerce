@@ -25,8 +25,6 @@ import software.amazon.awssdk.services.s3.model.S3Exception;
 
 @Service
 public class UploadFileService {
-	private String folder="images/";
-	private final Path root=Paths.get("images");
 	
 	private final S3Client s3Client;
 		
@@ -52,10 +50,10 @@ public class UploadFileService {
 			
 			
 		}else {
-			File filesource=new File("/opt/default.jpg");
-			File fileDest=new File("/default.jpg");
+			File filesource=new File("images/default.jpg");
+			File fileDest=new File("images/default.jpg");
 			InputStream in=new FileInputStream(fileDest);
-			Path path=Paths.get(folder+fileDest);
+			Path path=Paths.get(localPath+fileDest);
 			Files.write(path, in.readAllBytes());
 		}
 		return "default.jpg";
